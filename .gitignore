@@ -1,0 +1,13 @@
+!jest.config.js
+*.d.ts
+node_modules
+**/netCore/obj
+**/netCore/bin
+**/netCore/*.zip
+target
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+.DS_Store

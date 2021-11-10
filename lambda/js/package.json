@@ -1,0 +1,14 @@
+{
+  "name": "js-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "jsLambda.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "voca": "^1.4.0"
+  }
+}
