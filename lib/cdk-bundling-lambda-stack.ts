@@ -1,18 +1,19 @@
-import * as cdk from '@aws-cdk/core';
-import * as lambda from '@aws-cdk/aws-lambda';
+import { Stack, StackProps, Duration } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 
 import { execSync } from 'child_process';
 
-export class CdkBundlingLambdaStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+export class CdkBundlingLambdaStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     const jsLambdaFunction = new lambda.Function(this, 'js-lambda', {
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       handler: 'jsLambda.handler',
       code: lambda.Code.fromAsset('./lambda/js', {
         bundling: {
-          image: lambda.Runtime.NODEJS_12_X.bundlingImage,
+          image: lambda.Runtime.NODEJS_16_X.bundlingImage,
           command: [],
           local: {
             tryBundle(outputDir: string) {
@@ -36,7 +37,7 @@ export class CdkBundlingLambdaStack extends cdk.Stack {
       }),
       memorySize: 1024,
       functionName: 'js-lambda',
-      timeout: cdk.Duration.seconds(1)
+      timeout: Duration.seconds(1)
     });
 
     const pythonLambdaFunction = new lambda.Function(this, 'python-lambda', {
@@ -57,7 +58,7 @@ export class CdkBundlingLambdaStack extends cdk.Stack {
               const commands = [
                 `cd lambda/python`,
                 `pip3 install -r requirements.txt -t ${outputDir}`,
-                `cp -au . ${outputDir}`
+                `cp -a . ${outputDir}`
               ];
 
               execSync(commands.join(' && '));
@@ -68,7 +69,7 @@ export class CdkBundlingLambdaStack extends cdk.Stack {
       }),
       memorySize: 1024,
       functionName: 'python-lambda',
-      timeout: cdk.Duration.seconds(1)
+      timeout: Duration.seconds(1)
     });
 
     const dotnetCoreLambdaFunction = new lambda.Function(this, 'dotnetcore-lambda',{
@@ -102,7 +103,7 @@ export class CdkBundlingLambdaStack extends cdk.Stack {
       }),
       memorySize: 1024,
       functionName: 'dotnetCore-lambda',
-      timeout: cdk.Duration.seconds(1)
+      timeout: Duration.seconds(1)
     });
     
     const javaLambdaFunction = new lambda.Function(this, 'java-lambda', {
@@ -134,7 +135,7 @@ export class CdkBundlingLambdaStack extends cdk.Stack {
       }),
       memorySize: 1024,
       functionName: 'java-lambda',
-      timeout: cdk.Duration.seconds(1)
+      timeout: Duration.seconds(1)
     });
     
     const javaLambdaLayer = new lambda.LayerVersion(this, 'java-lambda-layer', {
@@ -195,7 +196,7 @@ export class CdkBundlingLambdaStack extends cdk.Stack {
       }),
       memorySize: 1024,
       functionName: 'java-lambda-with-layer',
-      timeout: cdk.Duration.seconds(1)
+      timeout: Duration.seconds(1)
     });
   }
 }
